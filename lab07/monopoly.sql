@@ -33,7 +33,7 @@ CREATE TABLE PlayerGame (
 
 CREATE TABLE PlayerProperty(
 	gameID integer REFERENCES Game(ID),
-	playerID integer REFERENCES Player(ID) IS NOT NULL,
+	playerID integer REFERENCES Player(ID) NOT NULL,
 	houses integer,
 	hotels integer
 );
