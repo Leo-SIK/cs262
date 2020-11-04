@@ -1,34 +1,68 @@
 --
--- This SQL script implements sample queries on the Monopoly database.
+-- SQL queries on Monopoly database
 --
--- @author kvlinden
--- @version Summer, 2015
+--@Author: Leo Kim (sk79)
+--@date: 23/10/20
 --
 
--- Get the number of Game records.
+
+------------------------------
+--       Exercise 8.1        -
+------------------------------
+
+-- a
 SELECT *
   FROM Game
+  ORDER BY time DESC
   ;
 
--- Get the player records.
-SELECT * 
-  FROM Player
+-- b
+SELECT *
+  FROM Game
+  WHERE (time >= DATE_TRUNC('week', CURRENT_TIMESTAMP - interval '1 week'))
   ;
 
--- Get all the users with Calvin email addresses.
+-- c
 SELECT *
   FROM Player
- WHERE emailAddress LIKE '%calvin%'
+  WHERE name IS NOT NULL
  ;
 
--- Get the highest score ever recorded.
-  SELECT score
-    FROM PlayerGame
-ORDER BY score DESC
-   LIMIT 1
-   ;
-
--- Get the cross-product of all the tables.
-SELECT *
-  FROM Player, PlayerGame, Game
+-- d
+SELECT playerID
+  FROM PlayerGame
+  WHERE score > 2000
   ;
+
+-- e
+SELECT *
+  FROM Player
+  WHERE emailAddress like '%gmail%'
+  ;
+
+------------------------------
+--       Exercise 8.2        -
+------------------------------
+
+-- a
+SELECT score
+  FROM PlayerGame as P1, Player as P2
+  WHERE name = 'The King'
+    AND P2.ID = P1.playerID
+  ORDER BY score DESC
+  ;
+
+-- b
+SELECT name
+  FROM PlayerGame as P1, Game as P2, Player as P3
+  WHERE time = '2006-06-28 13:20:00'
+    AND P1.playerID = P3.ID
+    AND P1.gameID = P2.ID
+  ;
+-- c
+/* It compares IDs within Player table and returs ID that is greater.
+*/
+
+-- d
+/* Joining a table to itself can be used in situations where comparing rows within the same table or querying hierachical data.
+*/
