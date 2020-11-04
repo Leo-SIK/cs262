@@ -27,12 +27,26 @@ const port = process.env.PORT || 3000;
 const router = express.Router();
 router.use(express.json());
 
+// Home screen
 router.get("/", readHelloMessage);
+
+// Players
 router.get("/players", readPlayers);
 router.get("/players/:id", readPlayer);
 router.put("/players/:id", updatePlayer);
 router.post('/players', createPlayer);
 router.delete('/players/:id', deletePlayer);
+
+// PlayerGame
+router.get("/playergame", readPlayerGames);
+router.get("/playergame/game=:id", readPlayersInGame);
+router.get("/playergame/player=:id", readGamesWithPlayer);
+// router.put("/playergame/:id", updatePlayerGame);
+// router.post('/playergame', createPlayerGame);
+// router.delete('/playergame/:id', deletePlayerGame);
+
+// Players and PlayerGame
+router.get("/player_playergame", joinPlayer_PlayerGame);
 
 app.use(router);
 app.use(errorHandler);
@@ -55,9 +69,18 @@ function returnDataOr404(res, data) {
     }
 }
 
+/**************************************
+            Home Screen
+ **************************************/
+
 function readHelloMessage(req, res) {
-    res.send('Hello, CS 262 Monopoly service!');
+    res.send('Hello, CS 262 Monopoly service!\n');
 }
+
+
+/**************************************
+            Player
+ **************************************/
 
 function readPlayers(req, res, next) {
     db.many("SELECT * FROM Player")
@@ -107,4 +130,52 @@ function deletePlayer(req, res, next) {
         .catch(err => {
             next(err);
         });
+}
+
+/**************************************
+            PlayerGame
+ **************************************/
+
+function readPlayerGames(req, res, next) {
+    db.many("SELECT * FROM PlayerGame")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function readPlayersInGame(req, res, next) {
+    db.many(`SELECT * FROM PlayerGame WHERE gameID=${req.params.id}`)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+function readGamesWithPlayer(req, res, next) {
+    db.many(`SELECT * FROM PlayerGame WHERE playerID=${req.params.id}`)
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
+}
+
+/**************************************
+        Player and PlayerGame
+ **************************************/
+
+function joinPlayer_PlayerGame(req, res, next) {
+    db.many("SELECT * FROM Player, PlayerGame WHERE playerID = Player.ID")
+        .then(data => {
+            res.send(data);
+        })
+        .catch(err => {
+            next(err);
+        })
 }
