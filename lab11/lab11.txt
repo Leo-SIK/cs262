@@ -1,0 +1,1 @@
+For some of .js files in my team project, it was suggested to remove any of imports that were written but were never used. Also it was recommented to use single quote for strings instead of double qoute.
